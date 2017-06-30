@@ -11,11 +11,11 @@ import UIKit
 class MyScrollTextView: UIScrollView {
     
     var animationPixelsPerSecond: CGFloat = 60
-    var animationInterval: NSTimeInterval = 0.016
+    var animationInterval: TimeInterval = 0.016
     
-    private var label: UILabel?
+    fileprivate var label: UILabel?
     
-    private var animationTimer: NSTimer?
+    fileprivate var animationTimer: Timer?
     
     deinit {
         animationTimer?.invalidate()
@@ -27,14 +27,14 @@ class MyScrollTextView: UIScrollView {
         }
         set {
             if( label == nil ) {
-                label = UILabel(frame: CGRect(origin: CGPointZero, size: self.frame.size))
+                label = UILabel(frame: CGRect(origin: CGPoint.zero, size: self.frame.size))
                 label!.backgroundColor = self.backgroundColor
                 self.addSubview(label!)
             }
             guard let label = label else {fatalError()}
             label.text = newValue
-            let fitSize = label.sizeThatFits(CGSizeMake(9999, self.frame.height))
-            label.frame = CGRectMake(0, 0, fitSize.width, self.frame.height)
+            let fitSize = label.sizeThatFits(CGSize(width: 9999, height: self.frame.height))
+            label.frame = CGRect(x: 0, y: 0, width: fitSize.width, height: self.frame.height)
             self.contentSize = label.frame.size
             self.contentOffset = CGPoint(x: 0, y: 0)
             self.showsVerticalScrollIndicator = false
@@ -46,7 +46,7 @@ class MyScrollTextView: UIScrollView {
         animationTimer?.invalidate()
         animationTimer = nil
 
-        animationTimer = NSTimer.scheduledTimerWithTimeInterval(animationInterval, target: self, selector: #selector(moveLabel), userInfo: nil, repeats: true)
+        animationTimer = Timer.scheduledTimer(timeInterval: animationInterval, target: self, selector: #selector(moveLabel), userInfo: nil, repeats: true)
     }
     
     func stopAnimatingLabel() {
@@ -54,7 +54,7 @@ class MyScrollTextView: UIScrollView {
         animationTimer = nil
     }
     
-    @objc private func moveLabel(timer: NSTimer) {
+    @objc fileprivate func moveLabel(_ timer: Timer) {
         var offsetX = self.contentOffset.x
         offsetX += animationPixelsPerSecond * CGFloat(animationInterval)
         if offsetX > label?.frame.width ?? 0 {
