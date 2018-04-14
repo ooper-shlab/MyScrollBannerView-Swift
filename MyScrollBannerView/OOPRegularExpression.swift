@@ -30,7 +30,8 @@ class OOPRegularExpression: NSRegularExpression {
     
     convenience init(pattern: String, options: NSRegularExpression.Options, simpleBlock: @escaping SimpleReplacementBlock) throws {
         try self.init(pattern: pattern, options: options, block: {result,string,offset,_ in
-            let matchedString = (string as NSString).substring(with: result.range)
+            let range = Range(result.range, in: string)!
+            let matchedString = String(string[range])
             return simpleBlock(matchedString, offset)
         })
     }
